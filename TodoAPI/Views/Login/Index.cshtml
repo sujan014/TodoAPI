@@ -1,0 +1,48 @@
+﻿@model TodoAPI.Models.LoginRequest
+
+<div class="text-center">
+	<h1>
+		<p>Todo API Demo.</p>
+	</h1>
+
+	<h2>
+		<a href="https://localhost:7021/swagger/Index.html">Click here to go Swagger.</a>
+	</h2>
+		
+	<div class="row">
+		<div class="col-md-4">
+			<form asp-action="Login" align="center">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<p>
+						<label asp-for="Username" class="control-label"></label>
+						<input asp-for="Username" class="form-control" />
+						<span asp-validation-for="Username" class="text-danger"></span>
+					</p>
+				</div>
+				<div class="form-group">
+					<p>
+						<label asp-for="Password" class="control-label"></label>
+						<input asp-for="Password" class="form-control" />
+						<span asp-validation-for="Password" class="text-danger"></span>
+					</p>
+				</div>
+				<br />
+				<div class="form-group">
+					<p>
+						<input type="submit" value="Create" class="btn btn-primary" />
+					</p>
+				</div>
+				<div>
+					<a asp-action="Signup">
+						<p>
+							Don't have an account ? <b>Sign up</b>
+						</p>
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
