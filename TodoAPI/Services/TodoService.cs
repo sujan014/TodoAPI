@@ -72,7 +72,9 @@ namespace TodoAPI.Services
 
         public async Task<IEnumerable<Todo>> GetAllTodos()
         {
-            return await _context.Todos.ToArrayAsync();
+            // Why to array?
+            // Also you missing a method to get todo's by user id
+            return await _context.Todos.ToListAsync();
         }
 
         public async Task<IEnumerable<Todo>> GetTodos(int userId)

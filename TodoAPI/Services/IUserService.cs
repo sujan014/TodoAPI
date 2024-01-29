@@ -7,7 +7,6 @@ namespace TodoAPI.Services
     {
         Task<User> CreateUser(RegisterRequest request);
 
-        Task<User> LoginUser(LoginRequest request);
-        Task<IEnumerable<User>> GetUsers();
+        Task<string> LoginUser(LoginRequest request);
     }     
 }

@@ -23,12 +23,14 @@ namespace TodoAPI.Controllers
             _userService = userService;
         }
 
-        [HttpGet("getusers")]
-        public async Task<IActionResult> getUsers()
-        {
-            var users = await _userService.GetUsers();
-            return Ok(users);
-        }
+        // This is very dangerous to expose as an API enpoint with no Authorization. Plus,
+        // with no view model, you will return all users and passwords.
+        // [HttpGet("getusers")]
+        // public async Task<IActionResult> getUsers()
+        // {
+        //     var users = await _userService.GetUsers();
+        //     return Ok(users);
+        // }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -49,36 +51,23 @@ namespace TodoAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = await _userService.LoginUser(request);
-            
-            if (user == null) {
-                return BadRequest("Username or password mismatch.");
-            }
 
-            var token = GenerateToken(user);
+            // The following changes make more logical sense. Before you only returned the user.
+            // If you wanted to do that, the method should have been called something like
+            // getUserByUsernameAndPassword. Naming is VERY important.
+
+
+            string token;
+
+            try {
+                token = await _userService.LoginUser(user);
+            } catch(Exection ex) {
+                return BadRequest("Wrong username or password");
+            }
 
             return Ok(token);
         }
-        
-        private string GenerateToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.NameIdentifier,user.Username),
-            new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
-        };
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials);
-
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+    
 
     }
 }
