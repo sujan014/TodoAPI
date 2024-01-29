@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using TodoAPI.Models;
 
+// We don't need this controller. This is for the template with views. We only need the api controllers
 namespace TodoAPI.Controllers
 {
     public class HomeController : Controller

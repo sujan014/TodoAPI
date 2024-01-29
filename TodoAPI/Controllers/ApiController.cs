@@ -57,10 +57,13 @@ namespace TodoAPI.Controllers
             {
                 return BadRequest();
             }
+
+            // Are you sure this code is needed here?
             if (request == null)
             {
                 return BadRequest("Edit request null error");
             }
+            
             var userId = GetUserId();
             var todo = await _todoService.EditTodo(userId, request);
             return Ok(todo);

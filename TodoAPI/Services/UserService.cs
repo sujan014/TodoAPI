@@ -16,6 +16,7 @@ namespace TodoAPI.Services
 
         public async Task<User> LoginUser(LoginRequest request)
         {
+            // This part of the code should already be handled
             if (request == null)
             {
                 throw new Exception("Invalid user login");
@@ -48,10 +49,24 @@ namespace TodoAPI.Services
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        private string GenerateToken(User user)
         {
-            var users = await _context.Users.ToListAsync();
-            return users;
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier,user.Username),
+            new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
+        };
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials);
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
